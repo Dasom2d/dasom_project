@@ -22,6 +22,7 @@ export default {
     created: function() {
         eventBus.$on('triggerMapData', mapData => {
             this.mapObject = mapData;
+            console.log('test');
         })
 
 
