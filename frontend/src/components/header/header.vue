@@ -4,17 +4,20 @@
             <input id="searchBox" v-model="searchWord">
             <button style="cursor: pointer;" @click=goSearch()>조회</button>
             <searchList ref="search"></searchList>
+            <storeInfo></storeInfo>
         </div>
     </div>
 </template>
 
 <script>
 import searchList from '@/components/search/searchList';
+import storeInfo from '@/components/store/storeInfo'
 import eventBus from "@/js/eventBus";
 
 export default {
     components: {
-        searchList
+        searchList,
+        storeInfo
     },
     methods: {
         goSearch() {

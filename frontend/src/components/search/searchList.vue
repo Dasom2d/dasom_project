@@ -22,10 +22,7 @@ export default {
     created: function() {
         eventBus.$on('triggerMapData', mapData => {
             this.mapObject = mapData;
-            console.log('test');
         })
-
-
     },
     methods: {
         getSearchWord(word) {
@@ -63,8 +60,13 @@ export default {
 
             for (var i = 0; i < places.length; i++) {
                 // 마커를 생성하고 지도에 표시합니다
+                var placeInfo = {
+                    placeName: places[i].place_name,
+                    addressName: places[i].address_name,
+                    phone: places[i].phone
+                };
                 var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
-                    marker = this.addMarker(placePosition, i),
+                    marker = this.addMarker(placePosition, i, placeInfo),
                     itemEl = this.getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
                 // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
@@ -84,6 +86,11 @@ export default {
                     marker,
                     "mouseout",
                     makeOutListener(infowindow)
+                );
+                kakao.maps.event.addListener(
+                    marker,
+                    "click",
+                    makeClickListener(this.mapObject, marker.placeInfo, placePosition)
                 );
             }
 
@@ -124,8 +131,7 @@ export default {
 
             return el;
         },
-        addMarker(position, idx, title) {
-
+        addMarker(position, idx, placeInfo) {
 
             var imageSrc = this.markerImage; // 마커이미지의 주소입니다    
             var imageSize = new kakao.maps.Size(64, 69); // 마커이미지의 크기입니다
@@ -144,6 +150,7 @@ export default {
                 position: position, // 마커의 위치
                 image: markerImage
             });
+            marker.placeInfo = placeInfo;
 
             marker.setMap(this.mapObject); // 지도 위에 마커를 표출합니다
             this.markers.push(marker); // 배열에 생성된 마커를 추가합니다
@@ -186,7 +193,7 @@ export default {
             paginationEl.appendChild(fragment);
         },
         displayInfowindow(marker, title) {
-            var content = '<div style="padding:5px;z-index:1;">' + title + "</div>";
+            var content = '<div style="padding:5px;z-index:1;" >' + title + "</div>";
 
             this.infowindow.setContent(content);
             this.infowindow.open(map, marker);
@@ -218,6 +225,17 @@ function makeOverListener(map, marker, infowindow) {
 function makeOutListener(infowindow) {
     return function() {
         infowindow.close();
+    };
+}
+
+function makeClickListener(map, placeInfo, placePosition) {
+    return function() {
+        let simpleStoreData = {
+            map: map,
+            placeInfo: placeInfo,
+            placePosition: placePosition
+        }
+        eventBus.$emit('triggerPlaceData', simpleStoreData);
     };
 }
 </script>
