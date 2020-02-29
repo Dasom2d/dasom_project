@@ -3,6 +3,8 @@
         <div class="wrap" v-if="isDetailShow">
             <div class="info">
                 <div class="title"> {{store.place_name}}
+                    <div class="edit" title="편집" @click="editStore()" v-if="type==='view'"></div>
+                    <div class="save" title="저장" @click="saveStore()" v-if="type==='edit'"></div>
                     <div class="close" title="닫기" @click="close()"></div>
                 </div>
                 <div class="body">
@@ -25,7 +27,13 @@
                             </tr>
                             <tr>
                                 <th>추천메뉴</th>
-                                <td>불러올거야</td>
+                                <td v-if="type==='view'">불러올거야</td>
+                                <em  v-if="type==='edit'"><input v-model="menu"></em>
+                            </tr>
+                            <tr>
+                                <th>한줄평</th>
+                                <td v-if="type==='view'">불러올거야</td>
+                                <em  v-if="type==='edit'"><input v-model="comment"></em>
                             </tr>
                         </tbody>
                     </table>
@@ -44,11 +52,19 @@ export default {
     methods: {
         close(){
             this.$emit('close-detail');
+        },
+        editStore() {
+            this.type = 'edit';
+        },
+        saveStore() {
+            this.type = 'view';
         }
     },
     data() {
         return {
-            
+            type: 'view',
+            menu: '',
+            comment: ''
         }
     }
 }
@@ -91,15 +107,37 @@ export default {
     font-weight: bold;
 }
 
-.info .close {
+#storeDetailApp .info .edit {
     position: absolute;
-    top: 10px;
+    top: 6px;
+    right: 44px;
+    color: #888;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+    background-image: url('../../assets/icon/edit.png')
+}
+
+#storeDetailApp .info .save {
+    position: absolute;
+    top: 6px;
+    right: 44px;
+    color: #888;
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+    background-image: url('../../assets/icon/save.png')
+}
+
+#storeDetailApp .info .close {
+    position: absolute;
+    top: 6px;
     right: 10px;
     color: #888;
-    width: 17px;
-    height: 17px;
-    background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
-}
+    height: 24px;
+    width: 24px;
+    background-image: url('../../assets/icon/close.png')
+  }
 
 .info .close:hover {
     cursor: pointer;
@@ -147,7 +185,7 @@ export default {
     bottom: 0;
     width: 22px;
     height: 12px;
-    background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+    background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAABH0lEQVR4nO3aQQ6DIBQE0EmTHslzsOrpPEJXXk+btBt+0hi1aOErzLyErZ9BaRUAREREREREZJcOQB9bx1a/AzACeMc2AgiO9cNCfddB6L+Kew/CPLy1/sjFbvn6hTuAJ8oOQog17gVrJJlPAY8nYe3OnzIFUjqUcxA8a12uY5cNb0p28PLhTYmOVhPe5OxwdeFNjo5XG978E6D68OZIkGbCmz2BmgtvUoI1G95sBXzF1mx4szUIzYc3qYPQZHgTsP7I25RwDZ9zPUB+oJ4C1D+C1H+D1C9C1K/C1B9D1J/D1Asi1Eti1Iui1Mvi1Bsj1Ftj9JujS+cDPO7G1iCcfj5gAvAAMGS85twQa0wFayShPyIDkB+SEhERERERqdoHEwTXdJJTrPQAAAAASUVORK5CYII=');
 }
 
 .info .link {

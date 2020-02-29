@@ -117,7 +117,7 @@ export default {
     color: #888;
     width: 17px;
     height: 17px;
-    background: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+    background-image: url('http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
 }
 
 .info .close:hover {

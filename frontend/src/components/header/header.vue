@@ -3,6 +3,7 @@
         <div class="header" style="height: 55px;">
             <input id="searchBox" v-model="searchWord">
             <button style="cursor: pointer;" @click=goSearch()>조회</button>
+            <div class="close" title="편집"></div>
             <searchList ref="search"></searchList>
             <storeInfo></storeInfo>
         </div>
@@ -21,8 +22,8 @@ export default {
     },
     methods: {
         goSearch() {
-          this.showSearchList = true;
-          this.$refs.search.getSearchWord(this.showSearchList, this.searchWord);
+            this.showSearchList = true;
+            this.$refs.search.getSearchWord(this.showSearchList, this.searchWord);
         }
     },
     data() {
@@ -33,3 +34,10 @@ export default {
     }
 }
 </script>
+
+<style>
+.close {
+    background-image: url('../../assets/icon/close.png');
+    background-repeat: no-repeat;
+}
+</style>
