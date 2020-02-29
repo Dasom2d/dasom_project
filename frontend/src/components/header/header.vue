@@ -11,7 +11,7 @@
 
 <script>
 import searchList from '@/components/search/searchList';
-import storeInfo from '@/components/store/storeInfo'
+import storeInfo from '@/components/store/storeInfo';
 import eventBus from "@/js/eventBus";
 
 export default {
@@ -22,7 +22,7 @@ export default {
     methods: {
         goSearch() {
           this.showSearchList = true;
-          this.$refs.search.getSearchWord(this.searchWord);
+          this.$refs.search.getSearchWord(this.showSearchList, this.searchWord);
         }
     },
     data() {

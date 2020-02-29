@@ -1,8 +1,8 @@
 <template lang="html">
     <div class="searchListApp map_wrap position">
-        <div id="menu_wrap" class="bg_white">
+        <div id="menu_wrap" class="bg_white" v-if="isShow">
             <ul id="placesList" class="">
-                <li class="item" v-for="place in searchPlaceList">
+                <li class="item" v-for="place in searchPlaceList" @click="openStoreDetailInfo(place)">
                     <span class="markerbg marker_1"></span>
                     <div class="info">
                         <h5>{{place.place_name}}</h5>
@@ -12,20 +12,47 @@
                     </div>
                 </li>
             </ul>
+            <storeDetailInfo :store="selectedStore" :isDetailShow="isDetailShow" v-on:close-detail="closeDetail"></storeDetailInfo>
         </div>
     </div>
 </template>
 
 <script>
 import eventBus from "@/js/eventBus";
+import storeDetailInfo from '@/components/store/storeDetailInfo';
+
 export default {
+    components: {
+        storeDetailInfo
+    },
+    data() {
+        return {
+            isShow: false,
+            searchPlaceList: [],
+            mapObject: {},
+            psObject: new kakao.maps.services.Places(),
+            infowindow: new kakao.maps.InfoWindow({ zIndex: 1 }),
+            markers: [],
+            markerImage: require('../../assets/icon/marker.png'),
+            selectedStore: {},
+            isDetailShow: false
+        }
+    },
     created: function() {
         eventBus.$on('triggerMapData', mapData => {
             this.mapObject = mapData;
         })
     },
     methods: {
-        getSearchWord(word) {
+        openStoreDetailInfo(store) {
+            this.isDetailShow = true;
+            this.selectedStore = store;
+        },
+        closeDetail() {
+            this.isDetailShow = false;
+        },
+        getSearchWord(isShow, word) {
+            this.isShow = isShow;
             this.psObject.keywordSearch(word, this.placesSearchCB);
         },
         placesSearchCB(data, status, pagination) {
@@ -202,16 +229,6 @@ export default {
             while (el.hasChildNodes()) {
                 el.removeChild(el.lastChild);
             }
-        }
-    },
-    data() {
-        return {
-            searchPlaceList: [],
-            mapObject: {},
-            psObject: new kakao.maps.services.Places(),
-            infowindow: new kakao.maps.InfoWindow({ zIndex: 1 }),
-            markers: [],
-            markerImage: require('../../assets/icon/marker.png')
         }
     }
 }
