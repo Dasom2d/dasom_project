@@ -64,7 +64,9 @@ export default {
         return {
             type: 'view',
             menu: '',
-            comment: ''
+            comment: '',
+            emptyStarArr: new Array(5).fill(true),
+            fullStarArr: new Array(5).fill(false)
         }
     }
 }
@@ -212,5 +214,14 @@ table.w3-table-all {
     text-align: left;
     vertical-align: top;
     width: 0px;
+}
+
+.empty_star {
+    position: absolute;
+    color: #888;
+    height: 24px;
+    width: 24px;
+    background-image: url('../../assets/icon/empty_star.png');
+    background-repeat: no-repeat;
 }
 </style>
