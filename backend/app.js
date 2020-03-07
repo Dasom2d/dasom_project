@@ -6,13 +6,16 @@ var logger = require('morgan');
 
 // get movie router
 const moviesRouter = require('./routes/movie');
+var mysqlDB = require('./mysql-db');
+mysqlDB.connect();
 
-var mysql = require('mysql');
+var categoryRouter = require('./routes/category');
 
 var app = express();
 
 app.use(require('connect-history-api-fallback')());
 app.use('/api/movies', moviesRouter);
+app.use('/api/category', categoryRouter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,14 +47,14 @@ app.use(function (err, req, res, next) {
 });
 
 // Connection 객체 생성 
-var connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    user: 'dasom',   
-    password: 'Duddnjs12!',
-    database: 'mukza'  
-  });  
-  connection.connect()
+// var connection = mysql.createConnection({
+//     host: 'localhost',
+//     port: 3306,
+//     user: 'dasom',   
+//     password: 'Duddnjs12!',
+//     database: 'mukza'  
+//   });  
+//   connection.connect()
 
 
 module.exports = app;

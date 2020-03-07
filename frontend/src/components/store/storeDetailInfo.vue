@@ -9,8 +9,8 @@
                 </div>
                 <div class="body">
                     <!-- <div class="desc">
-                            <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
-                        </div> -->
+                                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
+                            </div> -->
                     <table class="w3-table-all w3-margin-top" id="myTable">
                         <tbody>
                             <tr>
@@ -28,12 +28,12 @@
                             <tr>
                                 <th>추천메뉴</th>
                                 <td v-if="type==='view'">불러올거야</td>
-                                <em  v-if="type==='edit'"><input v-model="menu"></em>
+                                <em v-if="type==='edit'"><input v-model="menu"></em>
                             </tr>
                             <tr>
                                 <th>한줄평</th>
                                 <td v-if="type==='view'">불러올거야</td>
-                                <em  v-if="type==='edit'"><input v-model="comment"></em>
+                                <em v-if="type==='edit'"><input v-model="comment"></em>
                             </tr>
                         </tbody>
                     </table>
@@ -49,8 +49,14 @@ export default {
     name: 'storeDetailInfo',
     props: ['store', 'isDetailShow'],
     components: {},
+    created() {
+        // this.$http.get('/api/category')
+        //     .then((response) => {
+        //         this.category = response.data
+        //     })
+    },
     methods: {
-        close(){
+        close() {
             this.$emit('close-detail');
         },
         editStore() {
@@ -66,7 +72,8 @@ export default {
             menu: '',
             comment: '',
             emptyStarArr: new Array(5).fill(true),
-            fullStarArr: new Array(5).fill(false)
+            fullStarArr: new Array(5).fill(false),
+            category: []
         }
     }
 }
@@ -139,7 +146,7 @@ export default {
     height: 24px;
     width: 24px;
     background-image: url('../../assets/icon/close.png')
-  }
+}
 
 .info .close:hover {
     cursor: pointer;
@@ -187,28 +194,39 @@ export default {
     bottom: 0;
     width: 22px;
     height: 12px;
-    background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAABH0lEQVR4nO3aQQ6DIBQE0EmTHslzsOrpPEJXXk+btBt+0hi1aOErzLyErZ9BaRUAREREREREZJcOQB9bx1a/AzACeMc2AgiO9cNCfddB6L+Kew/CPLy1/sjFbvn6hTuAJ8oOQog17gVrJJlPAY8nYe3OnzIFUjqUcxA8a12uY5cNb0p28PLhTYmOVhPe5OxwdeFNjo5XG978E6D68OZIkGbCmz2BmgtvUoI1G95sBXzF1mx4szUIzYc3qYPQZHgTsP7I25RwDZ9zPUB+oJ4C1D+C1H+D1C9C1K/C1B9D1J/D1Asi1Eti1Iui1Mvi1Bsj1Ftj9JujS+cDPO7G1iCcfj5gAvAAMGS85twQa0wFayShPyIDkB+SEhERERERqdoHEwTXdJJTrPQAAAAASUVORK5CYII=');
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAABH0lEQVR4nO3aQQ6DIBQE0EmTHslzsOrpPEJXXk+btBt+0hi1aOErzLyErZ9BaRUAREREREREZJcOQB9bx1a/AzACeMc2AgiO9cNCfddB6L+Kew/CPLy1/sjFbvn6hTuAJ8oOQog17gVrJJlPAY8nYe3OnzIFUjqUcxA8a12uY5cNb0p28PLhTYmOVhPe5OxwdeFNjo5XG978E6D68OZIkGbCmz2BmgtvUoI1G95sBXzF1mx4szUIzYc3qYPQZHgTsP7I25RwDZ9zPUB+oJ4C1D+C1H+D1C9C1K/C1B9D1J/D1Asi1Eti1Iui1Mvi1Bsj1Ftj9JujS+cDPO7G1iCcfj5gAvAAMGS85twQa0wFayShPyIDkB+SEhERERERqdoHEwTXdJJTrPQAAAAASUVORK5CYII=');
 }
 
 .info .link {
     color: #5085BB;
 }
+
 table.w3-table-all {
     margin: 20px 0;
 }
+
 .w3-margin-top {
-    margin-top: 16px!important;
+    margin-top: 16px !important;
 }
+
 .w3-table-all {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
     display: table;
 }
-.w3-table th:first-child, .w3-table td:first-child, .w3-table-all th:first-child, .w3-table-all td:first-child {
+
+.w3-table th:first-child,
+.w3-table td:first-child,
+.w3-table-all th:first-child,
+.w3-table-all td:first-child {
     padding-left: 16px;
 }
-.w3-table td, .w3-table th, .w3-table-all td, .w3-table-all th {
+
+.w3-table td,
+.w3-table th,
+.w3-table-all td,
+.w3-table-all th {
     padding: 8px 8px;
     display: table-cell;
     text-align: left;
