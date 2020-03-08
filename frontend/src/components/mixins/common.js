@@ -7,17 +7,19 @@ export const getApiData= {
     methods:{
         getApiData(url, params){
             let that = this;
-            this.$http.get('http://localhost:3000'+url, {
-                    params: params
-                }).then((response) => {
-                    if(response.statusText === 'OK'){
-                        this.returnData = response.data;
-                    }
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-
+            return new Promise((resolve, reject)=>{
+                this.$http.get('http://localhost:3000'+url, {
+                        params: params
+                    }).then((response) => {
+                        if(response.statusText === 'OK'){
+                            that.returnData = response.data;
+                            resolve(that);
+                        }
+                    })
+                    .catch(function (error) {
+                      console.log(error);
+                    });
+            })
         }
     }
 }

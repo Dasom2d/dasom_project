@@ -37,7 +37,8 @@ export default {
             markers: [],
             markerImage: require('../../assets/icon/marker.png'),
             selectedStore: {
-                store_id: null
+                store_id: null,
+                info: []
             },
             isDetailShow: false
         }
@@ -54,48 +55,32 @@ export default {
             this.getStoreId(store.id);
         },
         getStoreId(storeDaumId) {
-
             let url = '/api/storeInfo/getStoreId';
             let params = {
                 storeDaumId: storeDaumId
             };
-            this.getApiData(url, params);
-            console.log(this.returnData);
+            this.getApiData(url, params).then((that) => {
+                if(that.returnData.length === 1){
+                    that.selectedStore.store_id = that.returnData[0].store_id;
+                    that.getStoreInfo(that.selectedStore.store_id);
+                } else {
+                    that.selectedStore.store_id = null;
+                }
+            });
 
-            if(this.returnData.length === 1) {
+            if (this.returnData.length === 1) {
                 this.selectedStore.store_id = this.returnData[0].store_id
             } else {
                 this.selectedStore.store_id = null;
             }
-
-            // this.returnData.length === 1 ? this.selectedStore.store_id = this.returnData[0].store_id :
-            //     this.selectedStore.store_id = null;
-
-             console.log(this.selectedStore.store_id);
-
-            // this.$http.get('http://localhost:3000/api/storeInfo/getStoreId', {
-            //         params: {
-            //             storeDaumId: storeDaumId
-            //         }
-            //     }).then((response) => {
-            //        if(response.data.length == 1){
-            //             that.selectedStore.store_id = response.data[0].store_id;
-            //             that.getStoreInfo(response.data[0].store_id);
-            //        } else {
-            //            that.selectedStore.store_id = null;
-            //        }
-            //     });
         },
         getStoreInfo(storeId) {
-            console.log('store-id = ' + storeId);
-            let that = this;
-            this.$http.get('http://localhost:3000/api/storeInfo/getStoreInfo', {
-                params: {
-                    storeId: storeId
-                }
-            }).then((response) => {
-                console.log(response.data);
-                that.selectedStore.info = response.data;
+            let url = '/api/storeInfo/getStoreInfo';
+            let params = {
+                storeId: storeId
+            };
+            this.getApiData(url, params).then((that) => {
+                that.selectedStore.info = that.returnData;
             });
         },
         closeDetail() {
