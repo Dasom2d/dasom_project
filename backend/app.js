@@ -10,12 +10,16 @@ var mysqlDB = require('./mysql-db');
 mysqlDB.connect();
 
 var categoryRouter = require('./routes/category');
+var getStoreIdRouter = require('./routes/storeInfo/get-store-id');
+var getStoreInfoRouter = require('./routes/storeInfo/get-store-info');
 
 var app = express();
 
 app.use(require('connect-history-api-fallback')());
 app.use('/api/movies', moviesRouter);
 app.use('/api/category', categoryRouter);
+app.use('/api/storeInfo/getStoreId', getStoreIdRouter);
+app.use('/api/storeInfo/getStoreInfo', getStoreInfoRouter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

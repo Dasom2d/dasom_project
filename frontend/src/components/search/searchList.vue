@@ -47,6 +47,34 @@ export default {
         openStoreDetailInfo(store) {
             this.isDetailShow = true;
             this.selectedStore = store;
+            this.getStoreId(store.id);
+        },
+        getStoreId(storeDaumId) {
+            let that = this;
+            this.$http.get('/api/storeInfo/getStoreId', {
+                    params: {
+                        storeDaumId: storeDaumId
+                    }
+                }).then((response) => {
+                   if(response.data.length == 1){
+                        that.selectedStore.store_id = response.data[0].store_id;
+                        that.getStoreInfo(response.data[0].store_id);
+                   } else {
+                       that.selectedStore.store_id = null;
+                   }
+                });
+        },
+        getStoreInfo(storeId){
+            console.log('store-id = ' + storeId);
+            let that = this;
+            this.$http.get('/api/storeInfo/getStoreInfo', {
+                    params: {
+                        storeId: storeId
+                    }
+                }).then((response) => {
+                    console.log(response.data);
+                    that.selectedStore.info = response.data;
+                });
         },
         closeDetail() {
             this.isDetailShow = false;

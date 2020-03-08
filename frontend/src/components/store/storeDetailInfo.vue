@@ -49,12 +49,6 @@ export default {
     name: 'storeDetailInfo',
     props: ['store', 'isDetailShow'],
     components: {},
-    created() {
-        // this.$http.get('/api/category')
-        //     .then((response) => {
-        //         this.category = response.data
-        //     })
-    },
     methods: {
         close() {
             this.$emit('close-detail');
@@ -64,6 +58,8 @@ export default {
         },
         saveStore() {
             this.type = 'view';
+            console.log(this.store.store_id);
+            // this.store.store_id == undefined ? insert : update
         }
     },
     data() {
