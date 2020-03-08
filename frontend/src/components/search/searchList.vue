@@ -51,7 +51,7 @@ export default {
         },
         getStoreId(storeDaumId) {
             let that = this;
-            this.$http.get('/api/storeInfo/getStoreId', {
+            this.$http.get('http://localhost:3000/api/storeInfo/getStoreId', {
                     params: {
                         storeDaumId: storeDaumId
                     }
@@ -67,7 +67,7 @@ export default {
         getStoreInfo(storeId){
             console.log('store-id = ' + storeId);
             let that = this;
-            this.$http.get('/api/storeInfo/getStoreInfo', {
+            this.$http.get('http://localhost:3000/api/storeInfo/getStoreInfo', {
                     params: {
                         storeId: storeId
                     }

@@ -5,9 +5,6 @@ var router = express.Router();
 var mysqlDB = require('../../mysql-db');
 
 router.get('/', function (req, res, next) {
-    console.log('req.params = '+req.query.store_id);
-
-
     var sql = 'select store_id from store where store_daum_id = ?';
     var params = [];
     params.push(req.query.storeDaumId);

@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 // get movie router
 const moviesRouter = require('./routes/movie');
@@ -14,6 +15,7 @@ var getStoreIdRouter = require('./routes/storeInfo/get-store-id');
 var getStoreInfoRouter = require('./routes/storeInfo/get-store-info');
 
 var app = express();
+app.use(cors());
 
 app.use(require('connect-history-api-fallback')());
 app.use('/api/movies', moviesRouter);
@@ -34,6 +36,8 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
@@ -50,15 +54,7 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-// Connection 객체 생성 
-// var connection = mysql.createConnection({
-//     host: 'localhost',
-//     port: 3306,
-//     user: 'dasom',   
-//     password: 'Duddnjs12!',
-//     database: 'mukza'  
-//   });  
-//   connection.connect()
+
 
 
 module.exports = app;
