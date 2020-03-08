@@ -9,7 +9,7 @@ router.get('/', function (req, res, next) {
 
 
     var sql = `
-    select s.store_id, menu_name, price
+    select menu_name, price
     from store s
     left join menu m
     on s.store_id = m.store_id
