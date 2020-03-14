@@ -3,15 +3,13 @@
         <div class="wrap" v-if="isDetailShow">
             <div class="info">
                 <div class="title"> {{store.place_name}}
-                    <div class="edit" title="편집" @click="editStore()" v-if="type==='view'"></div>
-                    <div class="save" title="저장" @click="saveStore()" v-if="type==='edit'"></div>
                     <div class="close" title="닫기" @click="close()"></div>
                 </div>
                 <div class="body">
                     <!-- <div class="desc">
-                                <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
-                            </div> -->
-                    <table class="w3-table-all w3-margin-top" id="myTable">
+                                    <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
+                                </div> -->
+                    <table class="w3-table-all w3-margin-top tableRow">
                         <tbody>
                             <tr>
                                 <th>주소</th>
@@ -25,15 +23,34 @@
                                 <th>카테고리</th>
                                 <td>{{store.category_name}}</td>
                             </tr>
-                            <tr>
-                                <th>추천메뉴</th>
-                                <td v-if="type==='view'">불러올거야</td>
-                                <em v-if="type==='edit'"><input v-model="menu"></em>
-                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="body">
+                    <table class="w3-table-all w3-margin-top tableRow">
+                        <tbody>
                             <tr>
                                 <th>한줄평</th>
-                                <td v-if="type==='view'">불러올거야</td>
-                                <em v-if="type==='edit'"><input v-model="comment"></em>
+                                <td>{{store.category_name}}</td>
+                                <td class="plus" v-if="!isOnelineEdit" @click="isOnelineEdit = true"></td>
+                            </tr>
+                            <tr v-if="isOnelineEdit">
+                                <th></th>
+                                <td><input v-model="oneLineComment"></td>
+                                <td class="check" @click="saveOnelineComment"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="body">
+                    <table class="menuPhoto">
+                        <tbody>
+                            <tr>
+                                <th style="padding-bottom: 5px;">메뉴</th>
+                            </tr>
+                            <tr v-for="menuInfo in store.menu">
+                                <td>{{menuInfo.menu_name}}</td>
+                                <td>{{menuInfo.price}}원</td>
                             </tr>
                         </tbody>
                     </table>
@@ -45,28 +62,46 @@
 
 <script>
 import eventBus from "@/js/eventBus";
+import { apiData } from '@/components/mixins/common';
+
 export default {
+    mixins: [apiData],
     name: 'storeDetailInfo',
-    props: ['store', 'isDetailShow'],
+    props: ['store', 'isDetailShow', 'type'],
     components: {},
     methods: {
         close() {
             this.$emit('close-detail');
         },
-        editStore() {
-            this.type = 'edit';
-        },
         saveStore() {
-            this.type = 'view';
-            console.log(this.store.store_id);
-            // this.store.store_id == undefined ? insert : update
+            if (this.type === 'register') {
+                // 최초 가게 등록
+
+            }
+        },
+        saveOnelineComment() {
+            this.saveStore();
+            this.isOnelineEdit = false;
+
+            let url = '/api/storeInfo/insertOneline';
+            
+            let params = {
+                storeId: this.store.store_id,
+                note: this.oneLineComment
+            };
+
+            this.postApiData(url, params).then((that) => {
+                if(that.returnData.protocol41){
+                    console.log('성공');
+                }
+            });
         }
     },
     data() {
         return {
-            type: 'view',
             menu: '',
-            comment: '',
+            oneLineComment: '',
+            isOnelineEdit: false,
             emptyStarArr: new Array(5).fill(true),
             fullStarArr: new Array(5).fill(false),
             category: []
@@ -80,7 +115,7 @@ export default {
     position: fixed;
     z-index: 101;
     top: 146px;
-    left: 400px;
+    left: 55px;
 }
 
 .wrap {
@@ -89,7 +124,7 @@ export default {
 }
 
 #storeDetailApp .wrap .info {
-    width: 286px;
+    width: 486px;
     height: 500px;
     border-radius: 5px;
     border-bottom: 2px solid #ccc;
@@ -123,6 +158,12 @@ export default {
     background-image: url('../../assets/icon/edit.png')
 }
 
+#storeDetailApp .menuPhoto {
+    width: 200px;
+    padding: 7px;
+    margin-bottom: 4px;
+}
+
 #storeDetailApp .info .save {
     position: absolute;
     top: 6px;
@@ -144,6 +185,26 @@ export default {
     background-image: url('../../assets/icon/close.png')
 }
 
+#storeDetailApp .info .plus {
+    position: relative;
+    color: #888;
+    height: 24px;
+    width: 24px;
+    background-image: url('../../assets/icon/plus.png');
+    background-repeat: no-repeat;
+    cursor: pointer
+}
+
+#storeDetailApp .info .check {
+    position: relative;
+    color: #888;
+    height: 24px;
+    width: 24px;
+    background-image: url('../../assets/icon/check.png');
+    background-repeat: no-repeat;
+    cursor: pointer
+}
+
 .info .close:hover {
     cursor: pointer;
 }
@@ -151,6 +212,7 @@ export default {
 .info .body {
     position: relative;
     overflow: hidden;
+    border-bottom: 1px solid #ddd;
 }
 
 #storeDetailApp .info .desc {
@@ -198,11 +260,11 @@ export default {
 }
 
 table.w3-table-all {
-    margin: 20px 0;
+    margin: 5px 0;
 }
 
 .w3-margin-top {
-    margin-top: 16px !important;
+    margin-top: 10px !important;
 }
 
 .w3-table-all {
@@ -212,10 +274,9 @@ table.w3-table-all {
     display: table;
 }
 
-.w3-table th:first-child,
-.w3-table td:first-child,
-.w3-table-all th:first-child,
-.w3-table-all td:first-child {
+.w3-table th .w3-table td,
+.w3-table-all,
+.w3-table-all td {
     padding-left: 16px;
 }
 

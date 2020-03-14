@@ -5,8 +5,6 @@ var router = express.Router();
 var mysqlDB = require('../../mysql-db');
 
 router.get('/', function (req, res, next) {
-    console.log('req.params = '+req.query.storeDaumId);
-
 
     var sql = `
     select menu_name, price

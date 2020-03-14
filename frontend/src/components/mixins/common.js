@@ -1,4 +1,4 @@
-export const getApiData= {
+export const apiData= {
     data() {
         return {
             returnData: {}
@@ -15,11 +15,23 @@ export const getApiData= {
                             that.returnData = response.data;
                             resolve(that);
                         }
-                    })
-                    .catch(function (error) {
+                    }).catch(function (error) {
                       console.log(error);
                     });
-            })
+            });
+        }, 
+        postApiData(url, saveParams){
+            let that = this;
+            return new Promise((resolve, reject)=>{
+                this.$http.post('http://localhost:3000'+url, saveParams).then((response) => {
+                        if(response.statusText === 'OK'){
+                            that.returnData = response.data;
+                            resolve(that);
+                        }
+                    }).catch(function (error) {
+                      console.log(error);
+                    });
+            });
         }
     }
 }

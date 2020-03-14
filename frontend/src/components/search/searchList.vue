@@ -12,7 +12,7 @@
                     </div>
                 </li>
             </ul>
-            <storeDetailInfo :store="selectedStore" :isDetailShow="isDetailShow" v-on:close-detail="closeDetail"></storeDetailInfo>
+            <storeDetailInfo :store="selectedStore" :isDetailShow="isDetailShow" :type="detailStoreSaveType" v-on:close-detail="closeDetail"></storeDetailInfo>
         </div>
     </div>
 </template>
@@ -20,10 +20,10 @@
 <script>
 import eventBus from "@/js/eventBus";
 import storeDetailInfo from '@/components/store/storeDetailInfo';
-import { getApiData } from '@/components/mixins/common';
+import { apiData } from '@/components/mixins/common';
 
 export default {
-    mixins: [getApiData],
+    mixins: [apiData],
     components: {
         storeDetailInfo
     },
@@ -38,9 +38,10 @@ export default {
             markerImage: require('../../assets/icon/marker.png'),
             selectedStore: {
                 store_id: null,
-                info: []
+                menu: []
             },
-            isDetailShow: false
+            isDetailShow: false,
+            detailStoreSaveType: ''
         }
     },
     created: function() {
@@ -62,9 +63,11 @@ export default {
             this.getApiData(url, params).then((that) => {
                 if(that.returnData.length === 1){
                     that.selectedStore.store_id = that.returnData[0].store_id;
+                    that.detailStoreSaveType = 'update';
                     that.getStoreInfo(that.selectedStore.store_id);
                 } else {
                     that.selectedStore.store_id = null;
+                    that.detailStoreSaveType = 'register';
                 }
             });
 
@@ -75,12 +78,12 @@ export default {
             }
         },
         getStoreInfo(storeId) {
-            let url = '/api/storeInfo/getStoreInfo';
+            let url = '/api/storeInfo/getStoreMenuInfo';
             let params = {
                 storeId: storeId
             };
             this.getApiData(url, params).then((that) => {
-                that.selectedStore.info = that.returnData;
+                that.selectedStore.menu = that.returnData;
             });
         },
         closeDetail() {

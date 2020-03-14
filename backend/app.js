@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var bodyParser = require('body-parser');
 
 // get movie router
 const moviesRouter = require('./routes/movie');
@@ -12,16 +13,23 @@ mysqlDB.connect();
 
 var categoryRouter = require('./routes/category');
 var getStoreIdRouter = require('./routes/storeInfo/get-store-id');
-var getStoreInfoRouter = require('./routes/storeInfo/get-store-info');
+var getStoreMenuInfoRouter = require('./routes/storeInfo/get-store-info-menu');
+var insertOnelineRouter = require('./routes/storeInfo/insert');
 
 var app = express();
 app.use(cors());
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+ 
+// parse application/json
+app.use(bodyParser.json())
 
 app.use(require('connect-history-api-fallback')());
 app.use('/api/movies', moviesRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/storeInfo/getStoreId', getStoreIdRouter);
-app.use('/api/storeInfo/getStoreInfo', getStoreInfoRouter);
+app.use('/api/storeInfo/getStoreMenuInfo', getStoreMenuInfoRouter);
+app.use('/api/storeInfo/insertOneline', insertOnelineRouter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
