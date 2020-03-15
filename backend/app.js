@@ -14,7 +14,8 @@ mysqlDB.connect();
 var categoryRouter = require('./routes/category');
 var getStoreIdRouter = require('./routes/storeInfo/get-store-id');
 var getStoreMenuInfoRouter = require('./routes/storeInfo/get-store-info-menu');
-var insertOnelineRouter = require('./routes/storeInfo/insert');
+var getStoreSpecialNoteInfoRouter = require('./routes/storeInfo/get-store-info-special-note');
+var insertSpecialNoteRouter = require('./routes/storeInfo/insert');
 
 var app = express();
 app.use(cors());
@@ -29,7 +30,8 @@ app.use('/api/movies', moviesRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/storeInfo/getStoreId', getStoreIdRouter);
 app.use('/api/storeInfo/getStoreMenuInfo', getStoreMenuInfoRouter);
-app.use('/api/storeInfo/insertOneline', insertOnelineRouter);
+app.use('/api/storeInfo/getStoreSpecialNoteInfo', getStoreSpecialNoteInfoRouter);
+app.use('/api/storeInfo/insertSpecialNote', insertSpecialNoteRouter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

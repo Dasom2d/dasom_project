@@ -7,11 +7,9 @@ var mysqlDB = require('../../mysql-db');
 router.get('/', function (req, res, next) {
 
     var sql = `
-    select o.store_id, note
-    from store s
-    left join oneLine_comment o
-    on s.store_id = o.store_id
-    where s.store_id = ?;`;
+        select note, register_date
+        from special_note
+        where store_id = ?;`;
 
     var params = [];
     params.push(req.query.storeId);

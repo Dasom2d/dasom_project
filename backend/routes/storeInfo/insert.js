@@ -6,7 +6,7 @@ var mysqlDB = require('../../mysql-db');
 
 router.post('/', function (req, res, next) {
 
-    var sql = `insert into oneLine_comment(store_id, note, register_date)
+    var sql = `insert into special_note(store_id, note, register_date)
                 values(?, ?, now())`;
                 
     var values = [];

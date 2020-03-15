@@ -7,8 +7,8 @@
                 </div>
                 <div class="body">
                     <!-- <div class="desc">
-                                    <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
-                                </div> -->
+                                        <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
+                                    </div> -->
                     <table class="w3-table-all w3-margin-top tableRow">
                         <tbody>
                             <tr>
@@ -31,13 +31,15 @@
                         <tbody>
                             <tr>
                                 <th>한줄평</th>
-                                <td>{{store.category_name}}</td>
-                                <td class="plus" v-if="!isOnelineEdit" @click="isOnelineEdit = true"></td>
+                            </tr>
+                            <tr v-for="(spNote, idx) in store.special_note">
+                                <td>{{spNote.note}}</td>
+                                <td class="plus" v-if="!isOnelineEdit && idx===store.special_note.length-1" @click="isOnelineEdit = true"></td>
                             </tr>
                             <tr v-if="isOnelineEdit">
                                 <th></th>
-                                <td><input v-model="oneLineComment"></td>
-                                <td class="check" @click="saveOnelineComment"></td>
+                                <td><input v-model="specialNote"></td>
+                                <td class="check" @click="saveStoreSpecialNotes"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -70,9 +72,6 @@ export default {
     name: 'storeDetailInfo',
     props: ['store', 'isDetailShow', 'type'],
     components: {},
-    created(){
-        console.log(this.store.menu);
-    },
     methods: {
         close() {
             this.$emit('close-detail');
@@ -83,36 +82,48 @@ export default {
 
             }
         },
-        saveOnelineComment() {
-            if(this.isNull(this.oneLineComment)){
+        saveStoreSpecialNotes() {
+            if (this.isNull(this.specialNote)) {
                 alert('입력해줭');
                 return;
             }
             this.saveStore();
             this.isOnelineEdit = false;
 
-            let url = '/api/storeInfo/insertOneline';
-            
+            let url = '/api/storeInfo/insertSpecialNote';
+
             let params = {
                 storeId: this.store.store_id,
-                note: this.oneLineComment
+                note: this.specialNote
             };
 
             this.postApiData(url, params).then((that) => {
-                if(that.returnData.protocol41){
+                if (that.returnData.protocol41) {
                     console.log('성공');
+                    this.getStoreSpecialNotes();
                 }
             });
-        }
+        },
+        getStoreSpecialNotes() {
+            let url = '/api/storeInfo/getStoreSpecialNoteInfo';
+
+            let params = {
+                storeId: this.store.store_id
+            };
+            this.getApiData(url, params).then((that) => {
+                this.$set(this.store, 'special_note', that.returnData);
+                this.$forceUpdate();
+            });
+        },
     },
     data() {
         return {
             menu: '',
-            oneLineComment: '',
+            specialNote: '',
             isOnelineEdit: false,
             emptyStarArr: new Array(5).fill(true),
             fullStarArr: new Array(5).fill(false),
-            category: []
+            category: [],
         }
     }
 }
