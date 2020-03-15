@@ -7,8 +7,8 @@
                 </div>
                 <div class="body">
                     <!-- <div class="desc">
-                                        <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
-                                    </div> -->
+                                            <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
+                                        </div> -->
                     <table class="w3-table-all w3-margin-top tableRow">
                         <tbody>
                             <tr>
@@ -30,13 +30,13 @@
                     <table class="w3-table-all w3-margin-top tableRow">
                         <tbody>
                             <tr>
-                                <th>한줄평</th>
+                                <th>특이사항</th>
                             </tr>
                             <tr v-for="(spNote, idx) in store.special_note">
                                 <td>{{spNote.note}}</td>
-                                <td class="plus" v-if="!isOnelineEdit && idx===store.special_note.length-1" @click="isOnelineEdit = true"></td>
+                                <td class="plus" v-if="!isSpecialNoteEdit && idx===store.special_note.length-1" @click="isSpecialNoteEdit = true"></td>
                             </tr>
-                            <tr v-if="isOnelineEdit">
+                            <tr v-if="isSpecialNoteEdit">
                                 <th></th>
                                 <td><input v-model="specialNote"></td>
                                 <td class="check" @click="saveStoreSpecialNotes"></td>
@@ -50,9 +50,14 @@
                             <tr>
                                 <th style="padding-bottom: 5px;">메뉴</th>
                             </tr>
-                            <tr v-for="menuInfo in store.menu">
+                            <tr v-for="(menuInfo, idx) in store.menu">
                                 <td>{{menuInfo.menu_name}}</td>
                                 <td>{{menuInfo.price}}원</td>
+                                <td class="plus" v-if="!isMenuEdit && idx===store.menu.length-1" @click="isMenuEdit = true"></td>
+                            </tr>
+                            <tr v-if="isMenuEdit">
+                                <td><input v-model="menu" placeholder="메뉴입력"><input v-model="price" placeholder="가격입력"></td>
+                                <td class="check" @click="saveStoreMenu"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -72,6 +77,11 @@ export default {
     name: 'storeDetailInfo',
     props: ['store', 'isDetailShow', 'type'],
     components: {},
+    filters: {
+        dateFormat(date) {
+            return this.$moment(date).format('yyyy.MM.dd')
+        }
+    },
     methods: {
         close() {
             this.$emit('close-detail');
@@ -82,13 +92,48 @@ export default {
 
             }
         },
+        saveStoreMenu() {
+            if (this.isNull(this.ment) && this.isNull(this.price)) {
+                alert('입력해줭');
+                return;
+            }
+            this.saveStore();
+            this.isMenuEdit = false;
+
+            let url = '/api/storeInfo/insertMenu';
+
+            let params = {
+                storeId: this.store.store_id,
+                categoryGroupCode: this.store.category_group_code,
+                menuName: this.menu,
+                price: this.price
+            };
+
+            this.postApiData(url, params).then((that) => {
+                if (that.returnData.protocol41) {
+                    console.log('성공');
+                    this.getStoreMenu();
+                }
+            });
+        },
+        getStoreMenu() {
+            let url = '/api/storeInfo/getStoreMenuInfo';
+
+            let params = {
+                storeId: this.store.store_id
+            };
+            this.getApiData(url, params).then((that) => {
+                this.$set(this.store, 'menu', that.returnData);
+                this.$forceUpdate();
+            });
+        },
         saveStoreSpecialNotes() {
             if (this.isNull(this.specialNote)) {
                 alert('입력해줭');
                 return;
             }
             this.saveStore();
-            this.isOnelineEdit = false;
+            this.isSpecialNoteEdit = false;
 
             let url = '/api/storeInfo/insertSpecialNote';
 
@@ -119,8 +164,10 @@ export default {
     data() {
         return {
             menu: '',
+            price: '',
+            isMenuEdit: false,
             specialNote: '',
-            isOnelineEdit: false,
+            isSpecialNoteEdit: false,
             emptyStarArr: new Array(5).fill(true),
             fullStarArr: new Array(5).fill(false),
             category: [],

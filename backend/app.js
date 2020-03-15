@@ -15,7 +15,8 @@ var categoryRouter = require('./routes/category');
 var getStoreIdRouter = require('./routes/storeInfo/get-store-id');
 var getStoreMenuInfoRouter = require('./routes/storeInfo/get-store-info-menu');
 var getStoreSpecialNoteInfoRouter = require('./routes/storeInfo/get-store-info-special-note');
-var insertSpecialNoteRouter = require('./routes/storeInfo/insert');
+var insertSpecialNoteRouter = require('./routes/storeInfo/insert-special-note');
+var insertMenuRouter = require('./routes/storeInfo/insert-menu');
 
 var app = express();
 app.use(cors());
@@ -32,6 +33,7 @@ app.use('/api/storeInfo/getStoreId', getStoreIdRouter);
 app.use('/api/storeInfo/getStoreMenuInfo', getStoreMenuInfoRouter);
 app.use('/api/storeInfo/getStoreSpecialNoteInfo', getStoreSpecialNoteInfoRouter);
 app.use('/api/storeInfo/insertSpecialNote', insertSpecialNoteRouter);
+app.use('/api/storeInfo/insertMenu', insertMenuRouter);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
