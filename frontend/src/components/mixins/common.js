@@ -1,37 +1,15 @@
-export const apiData= {
+export const common= {
     data() {
         return {
-            returnData: {}
+            commonData: {}
         }
     },
     methods:{
-        getApiData(url, params){
-            let that = this;
-            return new Promise((resolve, reject)=>{
-                this.$http.get('http://localhost:3000'+url, {
-                        params: params
-                    }).then((response) => {
-                        if(response.statusText === 'OK'){
-                            that.returnData = response.data;
-                            resolve(that);
-                        }
-                    }).catch(function (error) {
-                      console.log(error);
-                    });
-            });
+        isNull(value){
+            if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){ 
+                return true 
+            }  else{ return false } 
         }, 
-        postApiData(url, saveParams){
-            let that = this;
-            return new Promise((resolve, reject)=>{
-                this.$http.post('http://localhost:3000'+url, saveParams).then((response) => {
-                        if(response.statusText === 'OK'){
-                            that.returnData = response.data;
-                            resolve(that);
-                        }
-                    }).catch(function (error) {
-                      console.log(error);
-                    });
-            });
-        }
     }
 }
+

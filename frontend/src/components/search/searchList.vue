@@ -20,7 +20,7 @@
 <script>
 import eventBus from "@/js/eventBus";
 import storeDetailInfo from '@/components/store/storeDetailInfo';
-import { apiData } from '@/components/mixins/common';
+import { apiData } from '@/components/mixins/commonApi';
 
 export default {
     mixins: [apiData],
@@ -51,7 +51,6 @@ export default {
     },
     methods: {
         openStoreDetailInfo(store) {
-            this.isDetailShow = true;
             this.selectedStore = store;
             this.getStoreId(store.id);
         },
@@ -83,7 +82,8 @@ export default {
                 storeId: storeId
             };
             this.getApiData(url, params).then((that) => {
-                that.selectedStore.menu = that.returnData;
+                this.selectedStore.menu = that.returnData;
+                this.isDetailShow = true;
             });
         },
         closeDetail() {

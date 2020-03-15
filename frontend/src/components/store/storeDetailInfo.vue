@@ -62,13 +62,17 @@
 
 <script>
 import eventBus from "@/js/eventBus";
-import { apiData } from '@/components/mixins/common';
+import { apiData } from '@/components/mixins/commonApi';
+import { common } from '@/components/mixins/common';
 
 export default {
-    mixins: [apiData],
+    mixins: [apiData, common],
     name: 'storeDetailInfo',
     props: ['store', 'isDetailShow', 'type'],
     components: {},
+    created(){
+        console.log(this.store.menu);
+    },
     methods: {
         close() {
             this.$emit('close-detail');
@@ -80,6 +84,10 @@ export default {
             }
         },
         saveOnelineComment() {
+            if(this.isNull(this.oneLineComment)){
+                alert('입력해줭');
+                return;
+            }
             this.saveStore();
             this.isOnelineEdit = false;
 
