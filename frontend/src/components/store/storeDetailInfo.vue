@@ -15,8 +15,8 @@
                         </ul>
                     </div>
                     <div class="contentSpace">
-                        <table>
-                            <tbody v-if="view==='info'">
+                        <table v-if="view==='info'">
+                            <tbody>
                                 <tr>
                                     <th>주소</th>
                                     <td>{{store.road_address_name}}</td>
@@ -30,8 +30,9 @@
                                     <td>{{store.category_name}}</td>
                                 </tr>
                             </tbody>
-    
-                            <tbody v-if="view==='menu'">
+                        </table>
+                        <table v-if="view==='menu'">
+                            <tbody>
                                 <tr>
                                     <th style="padding-bottom: 5px;">메뉴</th>
                                 </tr>
@@ -44,8 +45,6 @@
                                     <td><input v-model="menu" placeholder="메뉴입력"><input v-model="price" placeholder="가격입력"></td>
                                     <td class="icon check" @click="saveStoreMenu"></td>
                                 </tr>
-    
-    
                                 <tr>
                                     <th>특이사항</th>
                                 </tr>
@@ -59,6 +58,11 @@
                                     <td class="icon check" @click="saveStoreSpecialNotes"></td>
                                 </tr>
                             </tbody>
+                        </table>
+                        <table v-if="view==='comment'">
+                            <tr> 
+                                <th>한줄평</th>
+                            </tr>
                         </table>
                     </div>
                 </div>
