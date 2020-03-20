@@ -6,61 +6,61 @@
                     <div class="close" title="닫기" @click="close()"></div>
                 </div>
                 <div class="body">
-                    <!-- <div class="desc">
-                                            <div class="ellipsis">제주특별자치도 제주시 첨단로 242</div>
-                                        </div> -->
-                    <table class="w3-table-all w3-margin-top tableRow">
-                        <tbody>
-                            <tr>
-                                <th>주소</th>
-                                <td>{{store.road_address_name}}</td>
-                            </tr>
-                            <tr>
-                                <th>전화번호</th>
-                                <td>{{store.phone}}</td>
-                            </tr>
-                            <tr>
-                                <th>카테고리</th>
-                                <td>{{store.category_name}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="body">
-                    <table class="w3-table-all w3-margin-top tableRow">
-                        <tbody>
-                            <tr>
-                                <th>특이사항</th>
-                            </tr>
-                            <tr v-for="(spNote, idx) in store.special_note">
-                                <td>{{spNote.note}}</td>
-                                <td class="plus" v-if="!isSpecialNoteEdit && idx===store.special_note.length-1" @click="isSpecialNoteEdit = true"></td>
-                            </tr>
-                            <tr v-if="isSpecialNoteEdit">
-                                <th></th>
-                                <td><input v-model="specialNote"></td>
-                                <td class="check" @click="saveStoreSpecialNotes"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="body">
-                    <table class="menuPhoto">
-                        <tbody>
-                            <tr>
-                                <th style="padding-bottom: 5px;">메뉴</th>
-                            </tr>
-                            <tr v-for="(menuInfo, idx) in store.menu">
-                                <td>{{menuInfo.menu_name}}</td>
-                                <td>{{menuInfo.price}}원</td>
-                                <td class="plus" v-if="!isMenuEdit && idx===store.menu.length-1" @click="isMenuEdit = true"></td>
-                            </tr>
-                            <tr v-if="isMenuEdit">
-                                <td><input v-model="menu" placeholder="메뉴입력"><input v-model="price" placeholder="가격입력"></td>
-                                <td class="check" @click="saveStoreMenu"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="btnSpace">
+                        <ul>
+                            <li class="icon info" @click="view='info'"></li>
+                            <li class="icon menu" @click="view='menu'"></li>
+                            <li class="icon comment" @click="view='comment'">></li>
+                            <li class="icon photo" @click="view='photo'">></li>
+                        </ul>
+                    </div>
+                    <div class="contentSpace">
+                        <table>
+                            <tbody v-if="view==='info'">
+                                <tr>
+                                    <th>주소</th>
+                                    <td>{{store.road_address_name}}</td>
+                                </tr>
+                                <tr>
+                                    <th>전화번호</th>
+                                    <td>{{store.phone}}</td>
+                                </tr>
+                                <tr>
+                                    <th>카테고리</th>
+                                    <td>{{store.category_name}}</td>
+                                </tr>
+                            </tbody>
+    
+                            <tbody v-if="view==='menu'">
+                                <tr>
+                                    <th style="padding-bottom: 5px;">메뉴</th>
+                                </tr>
+                                <tr v-for="(menuInfo, idx) in store.menu">
+                                    <td>{{menuInfo.menu_name}}</td>
+                                    <td>{{menuInfo.price}}원</td>
+                                    <td class="icon plus" v-if="!isMenuEdit && idx===store.menu.length-1" @click="isMenuEdit = true"></td>
+                                </tr>
+                                <tr v-if="isMenuEdit">
+                                    <td><input v-model="menu" placeholder="메뉴입력"><input v-model="price" placeholder="가격입력"></td>
+                                    <td class="icon check" @click="saveStoreMenu"></td>
+                                </tr>
+    
+    
+                                <tr>
+                                    <th>특이사항</th>
+                                </tr>
+                                <tr v-for="(spNote, idx) in store.special_note">
+                                    <td>{{spNote.note}}</td>
+                                    <td class="icon plus" v-if="!isSpecialNoteEdit && idx===store.special_note.length-1" @click="isSpecialNoteEdit = true"></td>
+                                </tr>
+                                <tr v-if="isSpecialNoteEdit">
+                                    <th></th>
+                                    <td><input v-model="specialNote"></td>
+                                    <td class="icon check" @click="saveStoreSpecialNotes"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -171,6 +171,8 @@ export default {
             emptyStarArr: new Array(5).fill(true),
             fullStarArr: new Array(5).fill(false),
             category: [],
+            // 3/20 추가
+            view: 'info'
         }
     }
 }
@@ -199,11 +201,6 @@ export default {
     background: #fff;
 }
 
-.wrap .info:nth-child(1) {
-    border: 0;
-    box-shadow: 0px 1px 2px #888;
-}
-
 .info .title {
     padding: 5px 0 0 10px;
     height: 30px;
@@ -213,156 +210,68 @@ export default {
     font-weight: bold;
 }
 
-#storeDetailApp .info .edit {
-    position: absolute;
-    top: 6px;
-    right: 44px;
-    color: #888;
-    height: 24px;
-    width: 24px;
+#storeDetailApp .wrap .info .body {
+    width: 100%;
+    height: 100%;
+}
+
+#storeDetailApp .wrap .info .body .btnSpace {
+    width: 15%;
+    height: 465px;
+    float: left;
+}
+
+#storeDetailApp .wrap .info .body .btnSpace .icon.info {
+    background-image: url('../../assets/icon/info.png');
+    background-repeat: no-repeat;
     cursor: pointer;
-    background-image: url('../../assets/icon/edit.png')
-}
-
-#storeDetailApp .menuPhoto {
-    width: 200px;
-    padding: 7px;
-    margin-bottom: 4px;
-}
-
-#storeDetailApp .info .save {
-    position: absolute;
-    top: 6px;
-    right: 44px;
-    color: #888;
     height: 24px;
     width: 24px;
+}
+
+#storeDetailApp .wrap .info .body .btnSpace .icon.menu {
+    background-image: url('../../assets/icon/menu.png');
+    background-repeat: no-repeat;
     cursor: pointer;
-    background-image: url('../../assets/icon/save.png')
-}
-
-#storeDetailApp .info .close {
-    position: absolute;
-    top: 6px;
-    right: 10px;
-    color: #888;
     height: 24px;
     width: 24px;
-    background-image: url('../../assets/icon/close.png')
 }
 
-#storeDetailApp .info .plus {
-    position: relative;
-    color: #888;
+#storeDetailApp .wrap .info .body .btnSpace .icon.comment {
+    background-image: url('../../assets/icon/comment.png');
+    background-repeat: no-repeat;
+    cursor: pointer;
     height: 24px;
     width: 24px;
+}
+
+#storeDetailApp .wrap .info .body .btnSpace .icon.photo {
+    background-image: url('../../assets/icon/photo.png');
+    background-repeat: no-repeat;
+    cursor: pointer;
+    height: 24px;
+    width: 24px;
+}
+
+.info .body .contentSpace {
+    width: 85%;
+    height: 465px;
+    float: left;
+}
+
+#storeDetailApp .wrap .info .body .contentSpace .icon.plus {
     background-image: url('../../assets/icon/plus.png');
     background-repeat: no-repeat;
-    cursor: pointer
-}
-
-#storeDetailApp .info .check {
-    position: relative;
-    color: #888;
+    cursor: pointer;
     height: 24px;
     width: 24px;
+}
+
+#storeDetailApp .wrap .info .body .contentSpace .icon.check {
     background-image: url('../../assets/icon/check.png');
     background-repeat: no-repeat;
-    cursor: pointer
-}
-
-.info .close:hover {
     cursor: pointer;
-}
-
-.info .body {
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid #ddd;
-}
-
-#storeDetailApp .info .desc {
-    position: relative;
-    margin: 13px 0 0 0px;
-    height: 75px;
-}
-
-.desc .ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.desc .jibun {
-    font-size: 11px;
-    color: #888;
-    margin-top: -2px;
-}
-
-.info .img {
-    position: absolute;
-    top: 6px;
-    left: 5px;
-    width: 73px;
-    height: 71px;
-    border: 1px solid #ddd;
-    color: #888;
-    overflow: hidden;
-}
-
-.info:after {
-    content: '';
-    position: absolute;
-    margin-left: -12px;
-    left: 50%;
-    bottom: 0;
-    width: 22px;
-    height: 12px;
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAABH0lEQVR4nO3aQQ6DIBQE0EmTHslzsOrpPEJXXk+btBt+0hi1aOErzLyErZ9BaRUAREREREREZJcOQB9bx1a/AzACeMc2AgiO9cNCfddB6L+Kew/CPLy1/sjFbvn6hTuAJ8oOQog17gVrJJlPAY8nYe3OnzIFUjqUcxA8a12uY5cNb0p28PLhTYmOVhPe5OxwdeFNjo5XG978E6D68OZIkGbCmz2BmgtvUoI1G95sBXzF1mx4szUIzYc3qYPQZHgTsP7I25RwDZ9zPUB+oJ4C1D+C1H+D1C9C1K/C1B9D1J/D1Asi1Eti1Iui1Mvi1Bsj1Ftj9JujS+cDPO7G1iCcfj5gAvAAMGS85twQa0wFayShPyIDkB+SEhERERERqdoHEwTXdJJTrPQAAAAASUVORK5CYII=');
-}
-
-.info .link {
-    color: #5085BB;
-}
-
-table.w3-table-all {
-    margin: 5px 0;
-}
-
-.w3-margin-top {
-    margin-top: 10px !important;
-}
-
-.w3-table-all {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-    display: table;
-}
-
-.w3-table th .w3-table td,
-.w3-table-all,
-.w3-table-all td {
-    padding-left: 16px;
-}
-
-.w3-table td,
-.w3-table th,
-.w3-table-all td,
-.w3-table-all th {
-    padding: 8px 8px;
-    display: table-cell;
-    text-align: left;
-    vertical-align: top;
-    width: 0px;
-}
-
-.empty_star {
-    position: absolute;
-    color: #888;
     height: 24px;
     width: 24px;
-    background-image: url('../../assets/icon/empty_star.png');
-    background-repeat: no-repeat;
 }
 </style>
