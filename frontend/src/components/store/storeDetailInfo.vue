@@ -9,8 +9,8 @@
                     <div class="btnSpace">
                         <ul>
                             <li class="icon info" @click="view='info'"></li>
-                            <li class="icon menu" @click="view='menu'"></li>
-                            <li class="icon comment" @click="view='comment'">></li>
+                            <li class="icon menu" @click="getStoreInfo()"></li>
+                            <li class="icon comment" @click="getStoreComments()">></li>
                             <li class="icon photo" @click="view='photo'">></li>
                         </ul>
                     </div>
@@ -60,9 +60,24 @@
                             </tbody>
                         </table>
                         <table v-if="view==='comment'">
-                            <tr> 
-                                <th>한줄평</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>한줄평</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="comment in store.comment_info">
+                                    <td>{{comment.comment}}</td>
+                                    <td>{{comment.star_point}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="icon plus" v-if="!isCommentEdit" @click="isCommentEdit = true"></td>
+                                </tr>
+                                <tr v-if="isCommentEdit">
+                                        <td><input v-model="comment" placeholder="한줄평 입력"><input v-model="starPoint" placeholder="별점 입력"></td>
+                                        <td class="icon check" @click="saveStoreMenu"></td>
+                                    </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -89,6 +104,7 @@ export default {
     methods: {
         close() {
             this.$emit('close-detail');
+            this.view = 'info';
         },
         saveStore() {
             if (this.type === 'register') {
@@ -96,7 +112,49 @@ export default {
 
             }
         },
-        saveStoreMenu() {
+        getStoreInfo(storeId) {
+            this.view = 'menu';
+            Promise.all([this.getStoreMenu(), this.getStoreSpecialNotes()]).then((that) => {
+                console.log('조회 성공');
+            })
+
+        },
+        getStoreMenu() { // 메뉴 조회
+            let url = '/api/storeInfo/getStoreMenuInfo';
+
+            let params = {
+                storeId: this.store.store_id
+            };
+            this.getApiData(url, params).then((that) => {
+                this.$set(this.store, 'menu', that.returnData);
+                this.$forceUpdate();
+            });
+        },
+        getStoreSpecialNotes() { // 특이사항 조회
+            let url = '/api/storeInfo/getStoreSpecialNoteInfo';
+
+            let params = {
+                storeId: this.store.store_id
+            };
+            this.getApiData(url, params).then((that) => {
+                this.$set(this.store, 'special_note', that.returnData);
+                this.$forceUpdate();
+            });
+        },
+        getStoreComments() { // 한줄평 조회
+            this.view = 'comment';
+
+            let url = '/api/storeInfo/getStoreCommentInfo';
+            let params = {
+                storeId: this.store.store_id
+            };
+
+            this.getApiData(url, params).then((that) => {
+                this.$set(this.store, 'comment_info', that.returnData);
+                this.$forceUpdate();
+            });
+        },
+        saveStoreMenu() { // 메뉴 저장
             if (this.isNull(this.ment) && this.isNull(this.price)) {
                 alert('입력해줭');
                 return;
@@ -120,18 +178,7 @@ export default {
                 }
             });
         },
-        getStoreMenu() {
-            let url = '/api/storeInfo/getStoreMenuInfo';
-
-            let params = {
-                storeId: this.store.store_id
-            };
-            this.getApiData(url, params).then((that) => {
-                this.$set(this.store, 'menu', that.returnData);
-                this.$forceUpdate();
-            });
-        },
-        saveStoreSpecialNotes() {
+        saveStoreSpecialNotes() { // 특이사항 저장
             if (this.isNull(this.specialNote)) {
                 alert('입력해줭');
                 return;
@@ -153,17 +200,28 @@ export default {
                 }
             });
         },
-        getStoreSpecialNotes() {
-            let url = '/api/storeInfo/getStoreSpecialNoteInfo';
+        saveComments() { // 한줄평 저장
+            if (this.isNull(this.specialNote)) {
+                alert('입력해줭');
+                return;
+            }
+            this.saveStore();
+            this.isSpecialNoteEdit = false;
 
-            let params = {
-                storeId: this.store.store_id
-            };
-            this.getApiData(url, params).then((that) => {
-                this.$set(this.store, 'special_note', that.returnData);
-                this.$forceUpdate();
-            });
-        },
+            // let url = '/api/storeInfo/insertSpecialNote';
+
+            // let params = {
+            //     storeId: this.store.store_id,
+            //     note: this.specialNote
+            // };
+
+            // this.postApiData(url, params).then((that) => {
+            //     if (that.returnData.protocol41) {
+            //         console.log('성공');
+            //         this.getStoreSpecialNotes();
+            //     }
+            // });
+        }
     },
     data() {
         return {
@@ -172,6 +230,9 @@ export default {
             isMenuEdit: false,
             specialNote: '',
             isSpecialNoteEdit: false,
+            isCommentEdit: false,
+            starPoint: 0,
+            comment: '',
             emptyStarArr: new Array(5).fill(true),
             fullStarArr: new Array(5).fill(false),
             category: [],

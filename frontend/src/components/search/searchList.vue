@@ -63,7 +63,7 @@ export default {
                 if (that.returnData.length === 1) {
                     that.selectedStore.store_id = that.returnData[0].store_id;
                     that.detailStoreSaveType = 'update';
-                    that.getStoreInfo(that.selectedStore.store_id);
+                    this.isDetailShow = true;
                 } else {
                     that.selectedStore.store_id = null;
                     that.detailStoreSaveType = 'register';
@@ -76,37 +76,6 @@ export default {
             } else {
                 this.selectedStore.store_id = null;
             }
-        },
-        getStoreInfo(storeId) {
-            let params = {
-                storeId: storeId
-            };
-
-            Promise.all([this.getStoreMenu(params), this.getStoreSpecialNotes(params)]).then((that)=>{
-                this.isDetailShow = that.every(val=>val);
-            })
-
-
-        },
-        getStoreMenu(params) {
-            let url = '/api/storeInfo/getStoreMenuInfo';
-
-            return new Promise((resolve, reject) => {
-                this.getApiData(url, params).then((that) => {
-                    this.selectedStore.menu = that.returnData;
-                    resolve(true);
-                });
-            })
-        },
-        getStoreSpecialNotes(params) {
-            let url = '/api/storeInfo/getStoreSpecialNoteInfo';
-
-            return new Promise((resolve, reject) => {
-                this.getApiData(url, params).then((that) => {
-                    this.selectedStore.special_note = that.returnData;
-                    resolve(true);
-                });
-            })
         },
         closeDetail() {
             this.isDetailShow = false;
